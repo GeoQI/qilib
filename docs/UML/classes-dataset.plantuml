@@ -21,20 +21,24 @@ class DataSet {
     finalize()
     add_array()
     add_data(index_spec, data)
-    sync_from_storage()
+    sync_from_storage(timeout: Float)
     save_to_storage()
 }
 
 DataSet o-- DataArray
 
 interface DataSetIO {
-    read(timeout: Float) : ChangeSet[]
-    write(changes: ChangeSet[])
+    __init__()
+    bind_dataset(dataset: DataSet)
+    sync_from_storage(timeout: Float)
+    sync_metadata_to_storage(field_name: String, value: Any)
+    sync_data_to_storage(data_array: DataArray, index: Integer[])
+    sync_add_data_array_to_storage(data_array: DataArray)
     {static} load() : DataSet
     finalize()
 }
 
-DataSet --> DataSetIO
+DataSet <--> DataSetIO
 
 class MongoDataSetIO {
   __init__(document_id: String)
